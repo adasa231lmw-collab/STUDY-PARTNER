@@ -1,0 +1,856 @@
+# Project: JARVIS — Voice-Based Smart AI Companion
+
+Act as a senior AI engineer, full-stack developer, and software architect. Build a complete, working, voice-first personal AI companion inspired by JARVIS. Do not merely explain how to build it. Inspect the existing project, create the necessary files, implement the application, run it, test it, and fix errors.
+
+## 1. Core Vision
+
+Create a natural, intelligent, conversational AI companion that feels like a personal assistant rather than a basic voice chatbot.
+
+The assistant should:
+- Listen to my voice and respond with natural speech.
+- Support continuous conversations and follow-up questions.
+- Remember useful context and preferences with my control.
+- Help me study, research, code, brainstorm, and manage projects.
+- Explain difficult concepts in simple language when needed.
+- Act on approved tools rather than merely telling me what to do.
+- Maintain a consistent, friendly, witty, intelligent personality.
+- Support both voice and text conversations.
+- Work locally wherever practical, with optional online capabilities.
+
+The architecture must be modular so I can replace models, speech engines, search providers, and tools without rewriting the entire application.
+
+## 2. Voice System — Highest Priority
+
+Implement a functional voice conversation system.
+
+Required features:
+- Microphone input with clear recording-state indicators.
+- Speech-to-text transcription.
+- AI response generation.
+- Text-to-speech playback.
+- Interruptible speech: when I start talking, stop the assistant's current playback and listen to me.
+- Conversation history and contextual follow-ups.
+- A push-to-talk mode and an optional hands-free mode.
+- Configurable voice, speaking speed, volume, and language.
+- Handle microphone errors, empty input, timeouts, and unavailable services gracefully.
+- Avoid reading markdown, code syntax, and tool metadata aloud.
+- Stream responses where supported to reduce perceived latency.
+- Avoid speaking the same response twice.
+
+Use a provider-based design. Investigate practical options such as faster-whisper or whisper.cpp for local speech recognition, Piper or another compatible local TTS engine for speech synthesis, and Ollama for local language models. Use compatible, currently maintained implementations and verify their installation and interfaces before integrating them.
+
+Do not assume that a model or API is available. Detect missing dependencies and provide setup instructions.
+
+## 3. AI Brain and Model Integration
+
+Create a configurable model provider layer supporting:
+
+- Ollama-compatible local models.
+- OpenAI-compatible chat APIs.
+- Optional cloud providers through environment variables.
+- Streaming responses where supported.
+- Conversation context management.
+- Configurable system instructions and model parameters.
+- Tool calling through a validated, permission-aware tool registry.
+- Graceful handling of connection failures and unavailable models.
+
+I have a development laptop with:
+- Intel Core i5-9300H.
+- 16 GB RAM.
+- NVIDIA GTX 1650 with 4 GB VRAM.
+
+There is also a separate PC with an Intel i5-6500, 16 GB RAM, and no dedicated GPU.
+
+Prioritize efficient local inference, modest memory usage, and CPU-compatible fallbacks. Do not assume large models or GPU-heavy speech systems will run smoothly. Keep the assistant usable when optional services are unavailable.
+
+## 4. Study Companion
+
+Build a dedicated study mode.
+
+Capabilities:
+- Explain school subjects in simple, clear language.
+- Help with mathematics, science, social science, English, and programming.
+- Work through problems step by step.
+- Offer hints when requested rather than immediately revealing answers.
+- Generate revision notes, quizzes, flashcards, and practice questions.
+- Help plan revision sessions and track topics I have studied.
+- Accept pasted text and supported document uploads.
+- Answer questions about uploaded material using retrieval-augmented generation (RAG).
+- Clearly distinguish textbook information from additional explanations.
+- Support a configurable curriculum, including CBSE/NCERT.
+- Remember learning progress only when appropriate and with user control.
+
+Provide a focused study interface without unnecessary distractions.
+
+## 5. Research Assistant
+
+Build a real research workflow rather than relying exclusively on the language model's existing knowledge.
+
+Capabilities:
+- Search the web through a configurable search provider.
+- Open and extract information from permitted webpages.
+- Summarize articles and compare sources.
+- Provide citations and source links for factual research.
+- Identify disagreements, outdated information, and weak evidence.
+- Distinguish verified information from assumptions.
+- Research technical subjects, AI models, software, datasets, and project ideas.
+- Summarize PDFs and supported documents.
+- Save useful research findings into organized notes.
+
+Never fabricate citations or claim to have searched the web when no search was performed. Respect website restrictions and avoid bypassing authentication or access controls.
+
+## 6. Coding and Personal Projects
+
+Create a project assistant that can:
+- Explain code and debug errors.
+- Help plan and implement software projects.
+- Read files from explicitly approved workspaces.
+- Search project files and explain their relationships.
+- Propose code changes and review diffs.
+- Run approved commands in a controlled environment.
+- Display command output, errors, and logs.
+- Track tasks and summarize project progress.
+
+Require confirmation before destructive operations, installing dependencies, executing unfamiliar scripts, accessing sensitive files, or making changes outside an approved workspace. Never execute arbitrary model-generated commands silently.
+
+## 7. Personal Companion Personality
+
+The assistant should feel natural, consistent, and engaging.
+
+Personality goals:
+- Friendly, intelligent, relaxed, and conversational.
+- Witty when appropriate, without forcing jokes.
+- Able to discuss ideas, interests, everyday experiences, goals, and personal challenges.
+- Supportive without being excessively flattering or pretending everything is correct.
+- Able to disagree respectfully and explain why.
+- Match the conversation's tone without losing clarity.
+- Keep casual conversations concise and provide deeper explanations when asked.
+- Avoid repeating generic introductions or constantly announcing that it is an AI.
+- Never pretend to have feelings, experiences, or abilities it does not possess.
+
+Provide a configurable personality profile. Keep personality instructions separate from application logic.
+
+### Personalization and Memory
+
+Implement optional persistent memory for:
+- User-approved preferences.
+- Long-term projects and goals.
+- Useful conversation context.
+- Study progress and project decisions.
+
+Include controls to inspect, edit, disable, and delete stored memory. Do not save every conversation automatically. Avoid storing passwords, authentication secrets, and other sensitive data.
+
+The assistant should use relevant context naturally without unnecessarily repeating personal details.
+
+## 8. Additional Personal Companion Capabilities
+
+Design the application so it can optionally support:
+- Casual conversation and brainstorming.
+- Journaling and reflection.
+- Goal tracking and reminders.
+- Daily planning and task management.
+- Creative writing and storytelling.
+- Personalized recommendations based on approved preferences.
+- Configurable conversational styles and companion modes.
+
+Treat the companion as an assistant, not a replacement for real-world relationships or professional help.
+
+## 9. Tool and Action System
+
+Implement a modular tool registry with clear schemas, descriptions, input validation, permission checks, execution results, and error handling.
+
+Potential tools:
+- Web search and webpage retrieval.
+- Calculator and unit conversion.
+- Notes and file search.
+- Task management.
+- Local project inspection.
+- Approved shell commands.
+- Optional calendar and reminder integrations.
+
+The model must not be able to bypass tool permissions. Separate read-only operations from actions that modify data. Require explicit confirmation for consequential or destructive actions.
+
+Show the user which tool is being used and what action is about to happen.
+
+## 10. User Interface
+
+Build a polished desktop-first interface with:
+- A central animated voice orb or waveform.
+- Clear listening, thinking, speaking, and idle states.
+- A microphone button and interrupt/stop button.
+- A text input as an alternative to voice.
+- A conversation transcript.
+- A compact connection and model status panel.
+- Dedicated Study, Research, Projects, and Settings views.
+- Conversation history and searchable notes.
+- Dark theme by default.
+- Responsive layouts and accessible controls.
+
+Use subtle animations, a clean sci-fi aesthetic, and restrained visual effects. Prioritize responsiveness and usability over decorative complexity.
+
+The UI must show real application state. Do not create fake buttons, simulated AI responses, or decorative controls that do nothing.
+
+## 11. Privacy, Security, and Reliability
+
+- Store secrets in environment variables, never in frontend source code.
+- Keep local model endpoints configurable.
+- Make local versus cloud processing clear.
+- Validate tool inputs and file paths.
+- Restrict filesystem access to approved directories.
+- Never expose API keys in logs or transcripts.
+- Add timeouts, cancellation, error reporting, and retry handling.
+- Avoid recording or retaining audio unless explicitly configured.
+- Require permission before using external services or performing consequential actions.
+- Make it possible to use the core application without connecting every optional service.
+
+## 12. Engineering Requirements
+
+First inspect the repository, installed tools, existing code, operating system, and project structure.
+
+Then:
+1. Choose a maintainable architecture appropriate to the existing project.
+2. Create a concise implementation plan.
+3. Implement a working end-to-end vertical slice first: microphone or text input → model response → spoken response.
+4. Add interruption and conversation context.
+5. Add study mode and research with citations.
+6. Add memory, tools, and project assistance.
+7. Build and refine the interface.
+8. Add configuration, dependency checks, and setup documentation.
+9. Test the main workflows and fix actual failures.
+
+Prefer a lightweight architecture. Choose a suitable desktop framework based on the repository and my Windows environment. If starting from scratch, compare a lightweight web interface with a local Python backend against a desktop wrapper, and choose the simplest reliable option.
+
+Keep modules separated for:
+- UI.
+- Conversation orchestration.
+- LLM providers.
+- Speech recognition.
+- Speech synthesis.
+- Memory and retrieval.
+- Research and citations.
+- Tool execution and permissions.
+- Settings and logging.
+
+Do not overengineer with unnecessary microservices or multiple AI agents. Begin with one reliable orchestrator and add complexity only when justified.
+
+## 13. Definition of Done
+
+The project is not complete until:
+- I can launch it using documented steps.
+- I can type a message and receive a real model response.
+- I can speak, receive a transcription, and hear the assistant speak back.
+- I can interrupt spoken output.
+- Follow-up questions retain conversation context.
+- Missing models and dependencies produce actionable error messages.
+- Research results include real source links when web search is used.
+- Study mode can explain a question and work with supported study material.
+- Tool actions follow the configured permission system.
+- The main interface controls actually work.
+- No critical workflow depends on hardcoded fake responses.
+
+## Final Instructions
+
+Work directly in the repository using Kilo Code's available tools. Inspect before editing, make real changes, run relevant tests, and report what actually works.
+
+Do not stop after generating a plan, a mockup, or a collection of code snippets. Do not claim a feature is implemented unless you have implemented and tested it.
+
+If a feature requires an API key, unavailable hardware, or an external service, implement the appropriate integration boundary and clearly explain what is needed.
+
+Start by inspecting the project, then implement the smallest complete working version before expanding it into the full companion.
+
+
+
+
+## Critical Voice UX Requirement — ChatGPT Advanced Voice Style
+
+Replace the push-to-talk-first design with a real-time, full-duplex conversational voice interface similar to ChatGPT Voice.
+
+### Required behavior
+- Start a voice session with one button.
+- Once the session starts, continuously listen for the user's speech without requiring a button press for every message.
+- Automatically detect when the user has finished speaking using voice activity detection (VAD) and endpoint detection.
+- Generate a response and speak it aloud automatically.
+- Allow the user to interrupt the assistant naturally at any time. When the user starts speaking during playback, stop or cancel the current response immediately and prioritize the user's new speech.
+- Maintain conversational context across turns.
+- Handle natural pauses, short follow-ups, corrections, and people changing their minds mid-sentence.
+- Avoid responding to the assistant's own voice as if it were the user. Use echo cancellation where available, plus appropriate microphone and playback handling.
+- Show live states such as Listening, Processing, Speaking, and Reconnecting.
+- Provide a visible microphone mute button and an obvious End Voice Session button.
+- Support text input during a voice session.
+- Do not require the user to press Enter, click Send, or press a microphone button for each turn.
+- Do not repeatedly restart the conversation or play audio twice.
+- Recover gracefully from microphone permission errors, device disconnections, model failures, and network interruptions.
+
+### Architecture
+Implement an event-driven voice session manager with explicit states and cancellation support. Separate audio capture, VAD, speech recognition, response generation, TTS playback, and interruption handling.
+
+Prefer a streaming speech-to-speech API if a suitable provider is configured. Otherwise, implement a low-latency streaming pipeline:
+
+Microphone → VAD → speech recognition → conversational model → streaming TTS → speakers.
+
+Use WebRTC or compatible audio APIs when appropriate. For local operation, evaluate compatible VAD, local speech recognition, Ollama, and local TTS options. Keep providers replaceable.
+
+Prevent microphone feedback and audio self-triggering. Use barge-in detection, playback cancellation, and turn IDs to discard stale responses after an interruption.
+
+### UX goal
+The interaction should feel like a natural ongoing conversation with ChatGPT Voice, not a walkie-talkie, dictation app, or ordinary chatbot with a microphone button.
+
+Push-to-talk may exist as an optional fallback, but it must not be the default interaction.
+
+Implement this in the actual project, test the full conversation loop and interruptions, and document any limitations. Do not simulate real-time conversation with prerecorded audio or fake listening indicators.
+
+
+# JARVIS — Desktop AI Companion and Agent Harness
+
+Build a real Windows desktop AI companion with a polished sci-fi interface, natural voice interaction, a central Dynamic Island-style assistant, and a modular agent runtime.
+
+Do not create a mockup or a simple chatbot. Build a working application in the repository, run it, test it, and fix errors. Inspect the existing project before selecting a stack.
+
+## 1. Central Notch UI — Apple Dynamic Island Inspired
+
+Create a floating, pill-shaped assistant interface positioned at the top-center of the screen, inspired by Apple's Dynamic Island but designed for a Windows desktop.
+
+Visual behavior:
+- Small, minimal pill when idle.
+- Expand smoothly when activated.
+- Animated audio waveform or orb while listening.
+- Animated thinking state while generating a response.
+- Audio visualization while speaking.
+- Expandable transcript and tool-activity view.
+- Show the current task, active skill, or browser operation when relevant.
+- Smooth transitions, rounded edges, subtle glow, blur, and a premium dark theme.
+- Support minimizing to a compact floating pill.
+- Allow repositioning and provide a way to access the full application.
+
+The notch must be a real desktop overlay, not simply a pill at the top of a normal webpage.
+
+Implement click-through behavior where appropriate, correct window focus management, and proper window stacking. Avoid stealing keyboard focus during voice sessions.
+
+## 2. Global RSHIFT Hold-to-Talk
+
+Implement a genuine global keyboard shortcut for Windows.
+
+Default behavior:
+- Press and hold Right Shift (`RSHIFT`) to start recording.
+- Keep recording while the key remains held.
+- Release Right Shift to finalize the audio and submit the recognized message.
+- The assistant responds with speech.
+- Holding the key while the assistant is speaking interrupts playback and starts capturing the user's next message.
+- The shortcut should work while other applications are in the foreground, where Windows permissions and application state allow it.
+- Prevent repeated key-down events from creating duplicate recordings.
+- Correctly handle key-up events, application focus changes, microphone errors, and cancelled recordings.
+- Provide configurable shortcuts and an option to disable the global listener.
+
+Important: Right Shift can be used by other applications for typing or accessibility workflows. Provide a setting to change the shortcut, and avoid swallowing the key globally unless the user has enabled that behavior.
+
+Use an appropriate native Windows keyboard hook or desktop-framework integration. A webpage-only keyboard listener is not sufficient for a reliable global shortcut.
+
+Also implement an optional continuous voice mode:
+- Start and end a session with the mouse.
+- Automatic speech endpoint detection.
+- Natural turn-taking and follow-up questions.
+- Barge-in: speaking over the assistant cancels its current response.
+- Echo cancellation or equivalent safeguards against the microphone hearing the assistant's own playback.
+
+Both modes must work independently.
+
+## 3. Voice Engine
+
+Use a modular audio pipeline:
+
+Microphone → VAD → speech recognition → conversation orchestrator → language model → streaming TTS → speakers.
+
+Support:
+- Local STT and TTS providers.
+- Ollama-compatible language models.
+- Optional remote speech or speech-to-speech providers.
+- Streaming audio and text where supported.
+- Cancellation tokens and response IDs.
+- Audio buffering, resampling, and device selection.
+- Configurable voice and speaking speed.
+- A text-only fallback.
+- Microphone mute and end-session controls.
+
+Do not assume a model can run on the available hardware. Detect unavailable dependencies and offer alternatives.
+
+## 4. SSE and Real-Time Event Streaming
+
+Implement Server-Sent Events (SSE) for streaming backend events to the desktop interface where appropriate.
+
+The UI should receive real events such as:
+- `voice.listening`
+- `voice.transcription`
+- `assistant.thinking`
+- `assistant.token`
+- `assistant.speaking`
+- `assistant.interrupted`
+- `agent.tool.started`
+- `agent.tool.completed`
+- `agent.skill.loaded`
+- `research.source_found`
+- `task.completed`
+- `error`
+
+Use a consistent event schema containing an event ID, conversation ID, task ID when applicable, timestamp, event type, and structured payload.
+
+Requirements:
+- Stream model output as it becomes available.
+- Update the central notch without polling continuously.
+- Support reconnecting clients, event IDs, cancellation, and clean shutdown.
+- Avoid duplicate event processing.
+- Keep audio streaming separate from text/event streaming when the transport requires it.
+- Do not expose secrets or sensitive tool arguments in events.
+
+Use WebSockets or WebRTC when bidirectional or real-time audio transport requires them. Do not force SSE to handle binary audio.
+
+## 5. Agent Runtime and Tools Harness
+
+Build a real agent runtime with a central orchestrator, not a collection of disconnected buttons.
+
+Required architecture:
+- Conversation manager.
+- Model provider abstraction.
+- Tool registry.
+- Tool execution engine.
+- Skill registry and loader.
+- Permission manager.
+- Task and job manager.
+- Memory and RAG service.
+- Browser automation service.
+- Event bus.
+- Audit and error logs.
+
+The orchestrator must be able to reason about a task, select appropriate tools, inspect their results, continue when useful, and report the outcome.
+
+Support bounded tool-call loops, cancellation, timeouts, retry limits, and clear execution status.
+
+Use a single primary orchestrator initially. Add specialized agents only when there is a demonstrated need.
+
+## 6. Chrome-Like Browser Automation
+
+Create a browser tool harness using a suitable Playwright-based implementation.
+
+Capabilities:
+- Open and navigate to websites.
+- Inspect visible page content.
+- Click buttons and links.
+- Fill out forms.
+- Scroll and interact with pages.
+- Capture screenshots.
+- Extract relevant information.
+- Search across pages and collect research sources.
+- Manage tabs and browser sessions.
+- Return structured results to the agent.
+- Show the current browser action in the notch.
+
+Use an isolated browser context by default. Provide visible browser activity and allow the user to stop an ongoing task.
+
+Require confirmation before consequential actions such as submitting forms, making purchases, publishing content, or modifying important account settings.
+
+Never bypass authentication, CAPTCHAs, website access controls, or security protections. Do not expose passwords, cookies, or authentication tokens to the language model.
+
+Keep browser automation behind a standard tool interface so another browser provider can be added later.
+
+## 7. MCP and External Tool Integrations
+
+Support the Model Context Protocol (MCP) to make external tools discoverable and usable by the agent.
+
+Support:
+- Local MCP servers over stdio.
+- Remote MCP servers using Streamable HTTP.
+- Server discovery and tool listing.
+- Input schema validation.
+- Tool invocation and structured results.
+- Connection status and error reporting.
+- Per-server enable/disable controls.
+- Permission rules and approval prompts.
+
+SSE may be used for application event streaming, but prefer current MCP Streamable HTTP support for remote MCP integrations. Treat legacy MCP SSE transport as a compatibility option.
+
+Build a settings screen where I can add, remove, inspect, and test MCP connections.
+
+Never trust an MCP server or tool solely because it advertises itself as compatible.
+
+## 8. Dynamic Agent Skills
+
+Implement Agent Skills compatibility using the open `SKILL.md` format.
+
+Investigate the `skills` npm package and its CLI as an installation and discovery option. Do not assume it is itself the complete runtime for executing skills; implement the runtime integration the application actually needs.
+
+A skill may contain:
+- `SKILL.md` instructions and metadata.
+- Supporting documentation.
+- Templates and assets.
+- Optional scripts, when supported and explicitly permitted.
+
+Implement:
+- Skill discovery from configured local directories.
+- Skill metadata parsing and validation.
+- On-demand skill loading.
+- Skill selection based on the user's task and available capabilities.
+- Skill status and source attribution.
+- Installation and update workflows.
+- Enable/disable and uninstall controls.
+- User confirmation before adding a new third-party skill.
+- A skills management view showing installed skills and their capabilities.
+
+Support project-level skills and a user-configured global skill directory. Keep skills compatible with the Agent Skills directory convention wherever possible.
+
+A skill provides procedural instructions and resources; it does not automatically grant unrestricted access to tools or files.
+
+Treat third-party skill instructions and bundled scripts as untrusted. Inspect manifests, identify required permissions, and sandbox executable code. Never silently execute scripts during skill discovery or installation.
+
+Provide a controlled workflow for adding skills from supported registries, Git repositories, and local folders. Keep installation separate from activation.
+
+Do not install arbitrary skills automatically just because the model requests them.
+
+## 9. RAG and Long-Term Memory
+
+Implement retrieval-augmented generation for documents, research, and user-approved memories.
+
+Required components:
+- Document ingestion.
+- Text extraction and chunking.
+- Embedding provider abstraction.
+- Local vector store.
+- Metadata and keyword search.
+- Hybrid retrieval where practical.
+- Reranking when useful and affordable.
+- Source citations and document references.
+- Conversation-context retrieval.
+- Memory management and deletion.
+
+Support PDFs, Markdown, plain text, and other practical document formats.
+
+For study questions, retrieve relevant material and cite page numbers or sections when available. For web research, preserve source URLs and distinguish retrieved evidence from model-generated explanation.
+
+Use a lightweight local database and embedding model by default. Keep vector storage replaceable.
+
+Do not save every conversation into permanent memory. Separate short-term conversation context from long-term memory, indexed documents, and research notes.
+
+Include controls to inspect, edit, exclude, and delete stored content.
+
+## 10. Research and Web Search
+
+Build a research workflow using configurable search providers and browser retrieval tools.
+
+The agent should be able to:
+1. Understand the research question.
+2. Search for relevant sources.
+3. Retrieve and inspect permitted content.
+4. Compare claims across sources.
+5. Extract important findings.
+6. Cite the source URL and available metadata.
+7. Save a structured report or research note.
+
+Never fabricate sources, search results, quotations, or citations.
+
+If a provider is unavailable, clearly explain the limitation instead of pretending a search occurred.
+
+## 11. Local Model Support
+
+Prioritize my actual hardware:
+
+Development laptop:
+- Intel Core i5-9300H.
+- 16 GB RAM.
+- NVIDIA GTX 1650 with 4 GB VRAM.
+
+Separate inference PC:
+- Intel Core i5-6500.
+- 16 GB RAM.
+- No dedicated GPU.
+
+Support configurable Ollama endpoints and compatible chat APIs. Keep model selection independent of the voice, memory, and tool systems.
+
+Optimize for modest hardware. Avoid loading several large models simultaneously. Allow speech recognition and TTS to use CPU-compatible configurations.
+
+Keep external API credentials in environment variables or a suitable secure credential store.
+
+## 12. Security and Permissions
+
+Create a centralized permission system covering:
+- Browser navigation and interactions.
+- File access.
+- Shell execution.
+- Installing and running skills.
+- MCP tool calls.
+- External network requests.
+- Memory access.
+- Actions that modify external services.
+
+Use least privilege. Read-only actions should be distinguishable from actions that change data.
+
+Require explicit approval for destructive or consequential actions. Keep an audit trail without storing secrets.
+
+The model must never be able to override the permission manager through natural-language instructions or malicious retrieved content.
+
+## 13. UI and Settings
+
+Provide:
+- The floating center notch.
+- A full desktop conversation window.
+- Voice mode and hold-to-talk controls.
+- Conversation history.
+- Study and research views.
+- Task progress and tool execution logs.
+- Browser session controls.
+- Skill manager.
+- MCP server manager.
+- RAG document library.
+- Memory controls.
+- Model, microphone, voice, and hotkey settings.
+- Permission and privacy settings.
+
+All controls must be connected to actual backend functionality.
+
+## 14. Implementation Strategy
+
+First inspect the repository, available runtime, and installed dependencies.
+
+Then implement in stages:
+
+1. Desktop shell and functioning floating notch.
+2. Global RSHIFT hold-to-talk and a working voice pipeline.
+3. Continuous conversation and interruption handling.
+4. Model provider and conversation orchestrator.
+5. SSE event streaming and task cancellation.
+6. Tool registry and permission manager.
+7. Browser automation and MCP integration.
+8. Agent Skills discovery, validation, and activation.
+9. RAG, document ingestion, and source citations.
+10. Research workflows and settings.
+11. Automated tests, packaging, and setup documentation.
+
+Choose a practical desktop architecture for Windows, prioritizing reliable global hotkeys and audio handling. Explain the stack choice briefly, then start implementing.
+
+Run the application and verify each milestone. Do not mark a feature complete merely because its UI exists.
+
+## Definition of Done
+
+I should be able to:
+- Launch the desktop companion.
+- See its floating center notch.
+- Hold RSHIFT anywhere on the desktop to speak, then release it to submit.
+- Interrupt an ongoing spoken response.
+- Start a continuous voice session.
+- Watch live agent events and streaming responses.
+- Ask it to research a topic and receive cited results.
+- Load a document and ask questions using RAG.
+- Let it use an approved browser session and MCP tools.
+- Discover and activate a permitted Agent Skill.
+- Inspect and control persistent memory.
+- Cancel a running task and see genuine errors when a provider fails.
+
+Start with repository inspection and the smallest complete working implementation. Make real code changes, run tests, and report which features are working, which require configuration, and which remain incomplete.
+
+
+
+# 15. Multi-Agent Orchestration and Subagent Harness
+
+Upgrade JARVIS to support a real multi-agent architecture with one central orchestrator and multiple specialized subagents.
+
+## A. Main Orchestrator
+
+The main JARVIS agent is the user's primary interface. It must:
+- Understand the user's request and desired outcome.
+- Decide whether the task can be completed directly or requires delegation.
+- Break complex tasks into smaller, independent subtasks.
+- Select appropriate subagents based on their capabilities.
+- Dispatch independent subtasks concurrently when beneficial.
+- Track task status, dependencies, progress, and deadlines.
+- Collect and validate subagent results.
+- Resolve conflicting results and request additional investigation when needed.
+- Produce one coherent response to the user through voice or text.
+- Cancel delegated work when the user cancels the parent task.
+
+The orchestrator must remain responsible for the overall task and final response. Subagents should not independently send competing spoken responses to the user.
+
+## B. Specialized Subagents
+
+Create configurable agents with separate instructions, tool permissions, and optional model settings.
+
+Initial agent roles:
+
+1. **Research Agent**
+   - Searches the web and investigates topics.
+   - Extracts evidence and preserves source URLs.
+   - Compares claims across sources.
+   - Returns concise findings with citations and uncertainty notes.
+
+2. **Study Agent**
+   - Explains concepts, solves appropriate exercises, generates revision materials, and searches approved study documents.
+   - Uses RAG to ground answers in uploaded textbooks and notes.
+   - Adapts explanations to the user's requested difficulty.
+
+3. **Coding Agent**
+   - Inspects approved project workspaces.
+   - Investigates bugs, proposes code changes, writes tests, and analyzes errors.
+   - Runs only authorized commands.
+   - Reports changed files and test results.
+
+4. **Browser Agent**
+   - Uses the Playwright browser harness.
+   - Navigates pages, gathers information, interacts with forms, and returns structured results.
+   - Requires approval for consequential actions.
+
+5. **Memory and Knowledge Agent**
+   - Searches approved memories, notes, and indexed documents.
+   - Identifies relevant context for other agents.
+   - Suggests useful memory updates but does not silently store everything.
+
+6. **Planning Agent**
+   - Breaks large goals into manageable tasks.
+   - Identifies dependencies, milestones, and blockers.
+   - Tracks progress and proposes next steps.
+
+7. **Verification Agent**
+   - Independently checks important factual claims, citations, calculations, code changes, and task completion.
+   - Identifies missing evidence and inconsistencies.
+   - Must not simply approve another agent's answer without examining the available evidence.
+
+Allow custom agents to be added through configuration rather than requiring code changes.
+
+## C. Task Delegation and Parallel Execution
+
+Implement a real task manager and delegation protocol.
+
+Each delegated task must include:
+- Unique task ID and parent task ID.
+- Clear objective and acceptance criteria.
+- Relevant context and input references.
+- Allowed tools and permissions.
+- Expected output format.
+- Status, timestamps, and cancellation state.
+- Results, errors, and evidence references.
+
+Support the following task states:
+
+`queued → running → waiting → completed / failed / cancelled`
+
+The orchestrator should:
+- Execute independent tasks concurrently.
+- Respect dependencies between tasks.
+- Limit concurrent agents and model requests.
+- Apply per-task timeouts and retry limits.
+- Support cancellation propagation.
+- Avoid duplicate execution of the same task.
+- Recover gracefully from subagent failures.
+- Return partial results when a noncritical subagent fails.
+
+Do not launch every agent for every request. Use the smallest team that can complete the task reliably.
+
+Example: For an AI model research request, the Research Agent gathers current sources, the Coding or Technical Agent evaluates compatibility with the target hardware, and the Verification Agent checks the conclusions. The orchestrator combines their findings into one response.
+
+## D. Shared Context and Isolation
+
+Provide a controlled shared knowledge layer without sharing every agent's full conversation history.
+
+- Give each subagent only the context relevant to its task.
+- Allow shared references to documents, source URLs, code diffs, and intermediate results.
+- Preserve task provenance so the orchestrator knows which agent produced each finding.
+- Separate temporary task state from long-term user memory.
+- Prevent one agent from silently changing another agent's instructions or permissions.
+- Treat retrieved content, webpages, documents, and agent-generated messages as untrusted data.
+
+Subagents must not inherit unrestricted filesystem, browser, shell, network, or memory access from the orchestrator.
+
+## E. Agent-to-Agent Communication
+
+Use structured messages for task delegation, progress reports, clarification requests, results, and failures.
+
+Support:
+- Task assignment.
+- Progress events.
+- Requests for additional context.
+- Structured results.
+- Evidence and citations.
+- Failure reports.
+- Cancellation messages.
+
+Avoid uncontrolled agent-to-agent conversation loops. Every delegation must have a defined purpose, bounded execution budget, and completion condition.
+
+## F. Model Routing and Hardware Efficiency
+
+The application must support heterogeneous agent configurations.
+
+- Use the configured primary model for the orchestrator by default.
+- Allow lighter models for classification, summarization, and simple tasks.
+- Allow a stronger compatible model for complex research or verification when configured.
+- Permit several agents to share one local model service.
+- Queue inference requests when memory or GPU capacity is limited.
+- Avoid loading multiple large models into the GTX 1650's 4 GB VRAM simultaneously.
+- Allow CPU-only execution and remote model providers as optional alternatives.
+- Make agent-to-model assignments configurable.
+
+Parallelize independent tool and research work, but do not assume parallel LLM generation will always be faster on limited hardware.
+
+## G. Integration with Existing Harness
+
+All subagents must use the same central infrastructure:
+- Tool registry and permission manager.
+- MCP integrations.
+- Browser automation.
+- Agent Skills registry.
+- RAG and document retrieval.
+- Research and citation services.
+- SSE event bus.
+- Logging and cancellation system.
+
+Agents may have different tool allowlists, but they must not bypass the central permission manager.
+
+Skills can guide an agent's procedure, while tools perform the actual actions. Assign relevant skills to agents on demand rather than loading every skill into every agent.
+
+## H. Live Agent Activity in the Center Notch
+
+Display meaningful real-time activity through the existing SSE event system.
+
+Examples:
+- `agent.delegated`
+- `agent.started`
+- `agent.progress`
+- `agent.waiting`
+- `agent.completed`
+- `agent.failed`
+- `agent.cancelled`
+- `orchestrator.synthesizing`
+- `task.completed`
+
+The expanded notch should show:
+- The overall task.
+- Which agents are active.
+- Short status descriptions.
+- Completed and pending subtasks.
+- Tool execution activity.
+- Errors requiring attention.
+
+Provide a detailed task panel in the main application for inspecting agent outputs, evidence, and execution history.
+
+Never display fabricated progress. Events must represent real task state.
+
+## I. Security and Reliability
+
+- Enforce a global concurrency limit and bounded delegation depth.
+- Prevent recursive agent spawning without authorization.
+- Require approval for consequential external actions.
+- Keep secrets out of inter-agent messages and logs.
+- Validate all tool arguments and structured results.
+- Record which agent initiated each tool call.
+- Cancel descendants when their parent task is cancelled.
+- Use the verification agent selectively for high-impact or evidence-sensitive tasks.
+- Do not let agents approve their own restricted actions.
+
+## J. Implementation Order
+
+1. Build the task manager and structured delegation interface.
+2. Implement one orchestrator and two real subagents.
+3. Add concurrent execution, dependencies, and cancellation.
+4. Integrate tool permissions and shared RAG references.
+5. Add research, study, coding, browser, planning, and verification roles.
+6. Connect agent events to SSE and the central notch.
+7. Add model routing, resource limits, logs, and automated tests.
+
+Initially implement the Research Agent and Verification Agent as a proof of the delegation architecture. Confirm that they execute separate tasks, return real results, and are combined by the orchestrator before adding the remaining agents.
+
+Do not implement fake agents that merely return hardcoded responses. Use actual model calls or explicitly defined deterministic tools, and test delegation, concurrency, failure recovery, and cancellation.
+
